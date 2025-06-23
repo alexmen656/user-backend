@@ -302,6 +302,258 @@
       </div>
     </div>
     <div class="modal-backdrop fade" :class="{ show: showAddUserModal }" v-if="showAddUserModal"></div>
+
+    <!-- User Details Modal -->
+    <div class="modal fade" :class="{ show: showUserDetailsModal }" :style="{ display: showUserDetailsModal ? 'block' : 'none' }">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-person-circle me-2"></i>
+              User Details - {{ selectedUserDetails?.username }}
+            </h5>
+            <button type="button" class="btn-close" @click="closeUserDetailsModal"></button>
+          </div>
+          <div class="modal-body" v-if="selectedUserDetails">
+            <div class="row g-4">
+              <!-- Basic Information -->
+              <div class="col-lg-6">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="bi bi-person me-2"></i>
+                      Basic Information
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <div class="d-flex align-items-center mb-3">
+                          <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            {{ selectedUserDetails.username.charAt(0).toUpperCase() }}
+                          </div>
+                          <div>
+                            <h5 class="mb-0">{{ selectedUserDetails.username }}</h5>
+                            <span :class="getStatusBadgeClass(selectedUserDetails)">
+                              {{ getUserStatus(selectedUserDetails) }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Email</label>
+                        <div class="fw-bold">{{ selectedUserDetails.email }}</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">User ID</label>
+                        <div class="fw-bold font-monospace small">{{ selectedUserDetails._id }}</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">First Name</label>
+                        <div class="fw-bold">{{ selectedUserDetails.firstName || 'Not provided' }}</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Last Name</label>
+                        <div class="fw-bold">{{ selectedUserDetails.lastName || 'Not provided' }}</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Phone Number</label>
+                        <div class="fw-bold">{{ selectedUserDetails.phoneNumber || 'Not provided' }}</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">App ID</label>
+                        <div>
+                          <span class="badge bg-info">{{ selectedUserDetails.appId }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Status & Subscription -->
+              <div class="col-lg-6">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="bi bi-shield-check me-2"></i>
+                      Account Status
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Status</label>
+                        <div>
+                          <span :class="getStatusBadgeClass(selectedUserDetails)">
+                            {{ getUserStatus(selectedUserDetails) }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Subscription</label>
+                        <div>
+                          <span :class="getSubscriptionBadgeClass(selectedUserDetails.subscriptionStatus)">
+                            {{ selectedUserDetails.subscriptionStatus }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Is Active</label>
+                        <div>
+                          <span :class="selectedUserDetails.isActive ? 'badge bg-success' : 'badge bg-secondary'">
+                            {{ selectedUserDetails.isActive ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Is Blocked</label>
+                        <div>
+                          <span :class="selectedUserDetails.isBlocked ? 'badge bg-danger' : 'badge bg-success'">
+                            {{ selectedUserDetails.isBlocked ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Email Verified</label>
+                        <div>
+                          <span :class="selectedUserDetails.isEmailVerified ? 'badge bg-success' : 'badge bg-warning'">
+                            {{ selectedUserDetails.isEmailVerified ? 'Verified' : 'Not Verified' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-muted small">Two-Factor Auth</label>
+                        <div>
+                          <span :class="selectedUserDetails.hasTwoFactorAuth ? 'badge bg-success' : 'badge bg-secondary'">
+                            {{ selectedUserDetails.hasTwoFactorAuth ? 'Enabled' : 'Disabled' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Activity Information -->
+              <div class="col-lg-6">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="bi bi-clock-history me-2"></i>
+                      Activity Information
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Registration Date</label>
+                        <div class="fw-bold">{{ formatDateTime(selectedUserDetails.createdAt) }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Last Updated</label>
+                        <div class="fw-bold">{{ formatDateTime(selectedUserDetails.updatedAt) }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Last Login</label>
+                        <div class="fw-bold">{{ formatDateTime(selectedUserDetails.lastLoginAt) }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Last IP Address</label>
+                        <div class="fw-bold font-monospace">{{ selectedUserDetails.lastIpAddress || 'Not available' }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Login Count</label>
+                        <div class="fw-bold">{{ selectedUserDetails.loginCount || 0 }} times</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Information -->
+              <div class="col-lg-6">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="bi bi-info-circle me-2"></i>
+                      Additional Information
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Profile Picture</label>
+                        <div>
+                          <span v-if="selectedUserDetails.profilePicture" class="badge bg-success">Available</span>
+                          <span v-else class="badge bg-secondary">Not set</span>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Language Preference</label>
+                        <div class="fw-bold">{{ selectedUserDetails.language || 'Not set' }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Timezone</label>
+                        <div class="fw-bold">{{ selectedUserDetails.timezone || 'Not set' }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Subscription Expires</label>
+                        <div class="fw-bold">{{ formatDateTime(selectedUserDetails.subscriptionExpiresAt) }}</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label text-muted small">Device Count</label>
+                        <div class="fw-bold">{{ selectedUserDetails.deviceCount || 0 }} devices</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- User Actions -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="bi bi-tools me-2"></i>
+                      Quick Actions
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                      <button class="btn btn-primary btn-sm" @click="editUser(selectedUserDetails)">
+                        <i class="bi bi-pencil me-1"></i>Edit User
+                      </button>
+                      <button 
+                        class="btn btn-sm" 
+                        :class="selectedUserDetails.isBlocked ? 'btn-success' : 'btn-warning'"
+                        @click="toggleBlockUser(selectedUserDetails)"
+                      >
+                        <i :class="selectedUserDetails.isBlocked ? 'bi bi-unlock me-1' : 'bi bi-lock me-1'"></i>
+                        {{ selectedUserDetails.isBlocked ? 'Unblock User' : 'Block User' }}
+                      </button>
+                      <button class="btn btn-danger btn-sm" @click="deleteUser(selectedUserDetails)">
+                        <i class="bi bi-trash me-1"></i>Delete User
+                      </button>
+                      <button class="btn btn-info btn-sm" @click="sendNotificationToUser(selectedUserDetails)">
+                        <i class="bi bi-bell me-1"></i>Send Notification
+                      </button>
+                      <button class="btn btn-secondary btn-sm" @click="exportUserData(selectedUserDetails)">
+                        <i class="bi bi-download me-1"></i>Export Data
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeUserDetailsModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade" :class="{ show: showUserDetailsModal }" v-if="showUserDetailsModal"></div>
   </div>
 </template>
 
@@ -326,7 +578,9 @@ export default {
       selectedUsers: [],
       selectAll: false,
       showAddUserModal: false,
+      showUserDetailsModal: false,
       editingUser: null,
+      selectedUserDetails: null,
       userForm: {
         username: '',
         email: '',
@@ -496,8 +750,13 @@ export default {
     },
     
     viewUserDetails(user) {
-      // Implement user details view
-      console.log('View user details:', user)
+      this.selectedUserDetails = user
+      this.showUserDetailsModal = true
+    },
+    
+    closeUserDetailsModal() {
+      this.showUserDetailsModal = false
+      this.selectedUserDetails = null
     },
     
     async bulkAction(action) {
@@ -524,9 +783,69 @@ export default {
       }
     },
     
+    async sendNotificationToUser(user) {
+      try {
+        // This would typically send a notification to the user
+        // For now, we'll just show an alert
+        alert(`Notification sent to ${user.username}`)
+        // In a real implementation, you might call:
+        // await api.sendNotification(user._id, { message: 'Your notification message' })
+      } catch (error) {
+        console.error('Error sending notification:', error)
+        alert('Failed to send notification')
+      }
+    },
+    
+    async exportUserData(user) {
+      try {
+        // Create a downloadable JSON file with user data
+        const userData = {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          appId: user.appId,
+          subscriptionStatus: user.subscriptionStatus,
+          isActive: user.isActive,
+          isBlocked: user.isBlocked,
+          isEmailVerified: user.isEmailVerified,
+          hasTwoFactorAuth: user.hasTwoFactorAuth,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          lastLoginAt: user.lastLoginAt,
+          lastIpAddress: user.lastIpAddress,
+          loginCount: user.loginCount
+        }
+        
+        const dataStr = JSON.stringify(userData, null, 2)
+        const dataBlob = new Blob([dataStr], { type: 'application/json' })
+        const url = URL.createObjectURL(dataBlob)
+        
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `user_${user.username}_${new Date().toISOString().split('T')[0]}.json`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+        
+        alert(`User data exported for ${user.username}`)
+      } catch (error) {
+        console.error('Error exporting user data:', error)
+        alert('Failed to export user data')
+      }
+    },
+    
     formatDate(date) {
       if (!date) return 'Never'
       return new Date(date).toLocaleDateString()
+    },
+    
+    formatDateTime(dateTime) {
+      if (!dateTime) return 'Never'
+      return new Date(dateTime).toLocaleString()
     },
     
     getUserStatus(user) {
