@@ -1,11 +1,9 @@
-// Local storage service for offline development
 class LocalStorageService {
   constructor() {
     this.initializeStorage()
   }
 
   initializeStorage() {
-    // Initialize with sample data if not exists
     if (!localStorage.getItem('users')) {
       const sampleUsers = [
         {
@@ -117,7 +115,6 @@ class LocalStorageService {
       localStorage.setItem('apps', JSON.stringify(sampleApps))
     }
 
-    // Initialize next ID counters
     if (!localStorage.getItem('nextUserId')) {
       localStorage.setItem('nextUserId', '4')
     }
@@ -126,7 +123,6 @@ class LocalStorageService {
     }
   }
 
-  // Utility methods
   generateId(type) {
     const key = `next${type}Id`
     const currentId = parseInt(localStorage.getItem(key))
@@ -138,14 +134,12 @@ class LocalStorageService {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  // User methods
   async getUsers(params = {}) {
     await this.delay()
     
     let users = JSON.parse(localStorage.getItem('users') || '[]')
     let filteredUsers = [...users]
 
-    // Apply filters
     if (params.search) {
       const searchLower = params.search.toLowerCase()
       filteredUsers = filteredUsers.filter(user => 
@@ -174,7 +168,6 @@ class LocalStorageService {
       filteredUsers = filteredUsers.filter(user => user.subscriptionStatus === params.subscription)
     }
 
-    // Pagination
     const page = parseInt(params.page || 1)
     const limit = parseInt(params.limit || 20)
     const skip = (page - 1) * limit
@@ -215,7 +208,6 @@ class LocalStorageService {
     
     const users = JSON.parse(localStorage.getItem('users') || '[]')
     
-    // Check for existing email/username
     const existing = users.find(u => u.email === userData.email || u.username === userData.username)
     if (existing) {
       throw new Error('User with this email or username already exists')
@@ -253,7 +245,6 @@ class LocalStorageService {
       throw new Error('User not found')
     }
     
-    // Don't allow changing email/username to existing ones
     if (userData.email || userData.username) {
       const existing = users.find(u => u._id !== id && (u.email === userData.email || u.username === userData.username))
       if (existing) {
@@ -298,7 +289,6 @@ class LocalStorageService {
     return { data: users[userIndex] }
   }
 
-  // App methods
   async getApps() {
     await this.delay()
     
@@ -324,7 +314,6 @@ class LocalStorageService {
     
     const apps = JSON.parse(localStorage.getItem('apps') || '[]')
     
-    // Check for existing appId/bundleId
     const existing = apps.find(a => a.appId === appData.appId || a.bundleId === appData.bundleId)
     if (existing) {
       throw new Error('App with this ID or Bundle ID already exists')
@@ -391,7 +380,6 @@ class LocalStorageService {
     return { data: apps[appIndex] }
   }
 
-  // Analytics methods
   async getDashboardAnalytics(appId = null) {
     await this.delay()
     
@@ -414,7 +402,6 @@ class LocalStorageService {
     const subscriptionStats = this.getGroupedStats(filteredUsers, 'subscriptionStatus')
     const platformStats = this.getGroupedStats(filteredUsers, 'deviceInfo.deviceType')
     
-    // Mock daily registrations for last 7 days
     const dailyRegistrations = []
     for (let i = 6; i >= 0; i--) {
       const date = new Date()
@@ -453,7 +440,6 @@ class LocalStorageService {
       date.setDate(date.getDate() - i)
       const dateStr = date.toISOString().split('T')[0]
       
-      // Calculate actual users for this date from filteredUsers
       const usersForDate = filteredUsers.filter(u => {
         const userDate = new Date(u.createdAt || u.registeredAt || '2024-01-01')
         return userDate.toISOString().split('T')[0] === dateStr
@@ -508,7 +494,6 @@ class LocalStorageService {
     users.forEach(user => {
       let value
       if (field.includes('.')) {
-        // Handle nested fields like 'deviceInfo.deviceType'
         const keys = field.split('.')
         value = user[keys[0]]?.[keys[1]]
       } else {
@@ -524,6 +509,247 @@ class LocalStorageService {
       count
     }))
   }
+
+  async submitUserRegistration(userData, apiKey) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    
+    const existing = users.find(u => 
+      (u.email === userData.email || u.username === userData.username) && 
+      u.appId === app.appId
+    )
+    
+    if (existing) {
+      return { 
+        data: { 
+          success: false, 
+          message: 'User already exists',
+          userId: existing._id 
+        } 
+      }
+    }
+
+    const newUser = {
+      _id: this.generateId('User'),
+      username: userData.username,
+      email: userData.email,
+      firstName: userData.firstName || '',
+      lastName: userData.lastName || '',
+      phoneNumber: userData.phoneNumber || '',
+      appId: app.appId,
+      isActive: true,
+      isBlocked: false,
+      subscriptionStatus: 'free',
+      loginCount: 0,
+      createdAt: new Date().toISOString(),
+      lastLoginAt: null,
+      deviceInfo: userData.deviceInfo || {
+        deviceType: 'Unknown',
+        deviceModel: 'Unknown',
+        osVersion: 'Unknown',
+        appVersion: '1.0.0'
+      }
+    }
+
+    users.push(newUser)
+    localStorage.setItem('users', JSON.stringify(users))
+
+    return {
+      data: {
+        success: true,
+        message: 'User registered successfully',
+        userId: newUser._id,
+        username: newUser.username,
+        email: newUser.email
+      }
+    }
+  }
+
+  async submitUserLogin(userId, apiKey, deviceInfo = null) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    const userIndex = users.findIndex(u => u._id === userId && u.appId === app.appId)
+    
+    if (userIndex === -1) {
+      throw new Error('User not found')
+    }
+
+    users[userIndex].lastLoginAt = new Date().toISOString()
+    users[userIndex].loginCount = (users[userIndex].loginCount || 0) + 1
+    
+    if (deviceInfo) {
+      users[userIndex].deviceInfo = {
+        ...users[userIndex].deviceInfo,
+        ...deviceInfo
+      }
+    }
+
+    localStorage.setItem('users', JSON.stringify(users))
+
+    return {
+      data: {
+        success: true,
+        message: 'Login tracked successfully',
+        userId: users[userIndex]._id,
+        loginCount: users[userIndex].loginCount,
+        lastLoginAt: users[userIndex].lastLoginAt
+      }
+    }
+  }
+
+  async submitUserUpdate(userId, updates, apiKey) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    const userIndex = users.findIndex(u => u._id === userId && u.appId === app.appId)
+    
+    if (userIndex === -1) {
+      throw new Error('User not found')
+    }
+
+    const allowedFields = ['firstName', 'lastName', 'phoneNumber', 'deviceInfo', 'subscriptionStatus']
+    const filteredUpdates = {}
+    
+    allowedFields.forEach(field => {
+      if (updates[field] !== undefined) {
+        filteredUpdates[field] = updates[field]
+      }
+    })
+
+    users[userIndex] = { ...users[userIndex], ...filteredUpdates }
+    localStorage.setItem('users', JSON.stringify(users))
+
+    return {
+      data: {
+        success: true,
+        message: 'User updated successfully',
+        userId: users[userIndex]._id,
+        username: users[userIndex].username,
+        email: users[userIndex].email
+      }
+    }
+  }
+
+  async submitEvent(eventData, apiKey) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    if (eventData.userId) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]')
+      const user = users.find(u => u._id === eventData.userId && u.appId === app.appId)
+      if (!user) {
+        throw new Error('User not found')
+      }
+    }
+
+    const events = JSON.parse(localStorage.getItem('events') || '[]')
+    const event = {
+      _id: Date.now().toString(),
+      appId: app.appId,
+      userId: eventData.userId || null,
+      eventType: eventData.eventType,
+      eventData: eventData.eventData || {},
+      timestamp: eventData.timestamp || new Date().toISOString(),
+      createdAt: new Date().toISOString()
+    }
+
+    events.push(event)
+    localStorage.setItem('events', JSON.stringify(events))
+
+    return {
+      data: {
+        success: true,
+        message: 'Event tracked successfully',
+        eventId: event._id,
+        timestamp: event.timestamp
+      }
+    }
+  }
+
+  async getUserByIdentifier(identifier, apiKey) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    const user = users.find(u => 
+      u.appId === app.appId && 
+      (u._id === identifier || u.email === identifier || u.username === identifier)
+    )
+    
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    return {
+      data: {
+        userId: user._id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isActive: user.isActive,
+        isBlocked: user.isBlocked,
+        subscriptionStatus: user.subscriptionStatus,
+        createdAt: user.createdAt,
+        lastLoginAt: user.lastLoginAt,
+        loginCount: user.loginCount
+      }
+    }
+  }
+
+  async healthCheck(apiKey) {
+    await this.delay()
+    
+    const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    const app = apps.find(a => a.apiKey === apiKey && a.isActive)
+    if (!app) {
+      throw new Error('Invalid API key')
+    }
+
+    return {
+      data: {
+        success: true,
+        message: 'API is healthy',
+        app: {
+          name: app.name,
+          appId: app.appId,
+          version: app.version
+        },
+        timestamp: new Date().toISOString()
+      }
+    }
+  }
+
 }
 
 export default new LocalStorageService()
