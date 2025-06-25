@@ -2,9 +2,10 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <i class="bi bi-grid-3x3-gap me-2"></i>
-        Control Center
-        <span class="badge bg-light text-dark ms-2 fw-normal">App Backend</span>
+        <!--<i class="bi bi-grid-3x3-gap me-2"></i>-->
+        <!--Control Center-->
+        <img src="@/assets/logo.png" alt="Control Center Logo" height="24" class="d-inline-block align-text-top">
+        <span class="badge bg-light text-dark ms-2 fw-normal"><i class="bi bi-grid-3x3-gap me-2"></i>App Backend</span>
       </a>
       
       <button 
