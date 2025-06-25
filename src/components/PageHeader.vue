@@ -1,5 +1,5 @@
 <template>
-    <div class="col">
+    <div class="col-12"><!-- Col 12 for now, for overlapping fix-->
         <h1 class="h3 mb-0">
             {{ title }}
             <span v-if="isOfflineMode" class="badge bg-warning ms-2">

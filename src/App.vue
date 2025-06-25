@@ -1,19 +1,24 @@
 <template>
   <div id="app">
+    <app-sidebar />
     <app-navbar />
-    <div class="container-fluid py-3">
-      <router-view></router-view>
+    <div class="main-content">
+      <div class="container-fluid py-3">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import AppNavbar from '@/components/AppNavbar.vue'
+import AppSidebar from '@/components/AppSidebar.vue'
 
 export default {
   name: 'App',
   components: {
-    AppNavbar
+    AppNavbar,
+    AppSidebar
   }
 }
 </script>
@@ -22,6 +27,18 @@ export default {
 #app {
   min-height: 100vh;
   background-color: #f8f9fa;
+}
+
+.main-content {
+  margin-left: 250px;
+  min-height: 100vh;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
 }
 
 .card {
