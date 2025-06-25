@@ -106,3 +106,22 @@ val response = userAPI.login(LoginRequest(email, password, appId))
 ```
 
 Built with ❤️ for iOS and Android developers who need a robust user management backend.
+
+
+
+
+## Features/Ideas
+- Push token for notifications intergration with ability to send directly for testing through dashboard
+- Email Newsletter
+- Google/Apple/Facebook/Github login
+- Welcome mails
+- Docs
+- More subscription levels
+- Push/Email notifications for admin
+- More languages
+- Login/Register Page
+- Home Page
+- Host frontend on github pages ???
+- MFA for users
+- SDKs for iOS/Android/Web(JS,NODE)
+- History of account status - helpful for moderation

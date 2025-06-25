@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="brand">
-        <img src="@/assets/logo.png" alt="Control Center Logo" height="28" class="d-inline-block align-text-top">
+        <a href="/"><img src="@/assets/logo.png" alt="Control Center Logo" height="28" class="d-inline-block align-text-top"></a>
         <!--<span class="badge bg-light text-dark ms-2 fw-normal"><i class="bi bi-grid-3x3-gap me-2"></i>App Backend</span>-->
       </div>
     </div>
@@ -26,16 +26,80 @@
         </router-link>
         <router-link class="nav-link" to="/settings">
           <i class="bi bi-gear me-2"></i>
-          App Settings
+          Project Settings
         </router-link>
       </nav>
     </div>
+
+    <div class="project-switcher">
+      <div class="dropdown dropup">
+        <button 
+          class="btn btn-light w-100 dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown"
+        >
+          <i class="bi bi-folder me-2"></i>
+          {{ selectedProject.name }}
+        </button>
+        <ul class="dropdown-menu w-100">
+          <li v-for="project in projects" :key="project.id">
+            <a 
+              class="dropdown-item" 
+              href="#" 
+              @click.prevent="selectProject(project)"
+              :class="{ 'active': project.id === selectedProject.id }"
+            >
+              {{ project.name }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AppSidebar'
+  name: 'AppSidebar',
+  data() {
+    return {
+      selectedProject: {
+        id: 1,
+        name: 'Main Project',
+        description: 'Primary application project'
+      },
+      projects: [
+        {
+          id: 1,
+          name: 'Main Project',
+          description: 'Primary application project'
+        },
+        {
+          id: 2,
+          name: 'Mobile App',
+          description: 'Mobile application backend'
+        },
+        {
+          id: 3,
+          name: 'Analytics Platform',
+          description: 'Data analytics and reporting'
+        },
+        {
+          id: 4,
+          name: 'E-Commerce API',
+          description: 'Online store backend services'
+        }
+      ]
+    }
+  },
+  methods: {
+    selectProject(project) {
+      this.selectedProject = project
+      this.$emit('project-changed', project)
+      console.log('Selected project:', project)
+    }
+  }
 }
 </script>
 
@@ -74,8 +138,27 @@ export default {
 
 .sidebar-content {
   padding: 1rem 0;
-  height: calc(100% - 80px);
+  height: calc(100% - 160px);
   overflow-y: auto;
+}
+
+.project-switcher {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+  background-color: #fff;
+}
+
+.project-switcher .btn {
+  text-align: left;
+}
+
+.project-switcher .dropdown-item.active {
+  background-color: #0d6efd;
+  color: white;
 }
 
 .nav-link {
@@ -106,7 +189,6 @@ export default {
   font-size: 1.1rem;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);

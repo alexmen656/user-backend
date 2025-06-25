@@ -3,7 +3,7 @@ import Dashboard from '../views/Dashboard.vue'
 import UserManagement from '../views/UserManagement.vue'
 import AppManagement from '../views/AppManagement.vue'
 import Analytics from '../views/Analytics.vue'
-import AppSettings from '../views/AppSettings.vue'
+import AppSettings from '../views/ProjectSettings.vue'
 import UserSettings from '../views/UserSettings.vue'
 
 const routes = [

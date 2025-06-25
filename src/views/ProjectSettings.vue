@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <div class="row mb-4">
-      <PageHeader :isOfflineMode="isOfflineMode" title="App Settings" desc="Configure global application settings and system preferences" />
+      <PageHeader :isOfflineMode="isOfflineMode" title="Project Settings" desc="Configure global project settings and system preferences" />
     </div>
 
     <div class="row">
@@ -10,7 +10,7 @@
           <div class="card-header">
             <h5 class="mb-0">
               <i class="bi bi-gear me-2"></i>
-              Application Configuration
+              Project Configuration
             </h5>
           </div>
           <div class="card-body">
@@ -19,7 +19,7 @@
               <div class="col-md-6">
                 <h5 class="mb-3">General Settings</h5>
                 <div class="mb-3">
-                  <label for="appName" class="form-label">Application Name</label>
+                  <label for="appName" class="form-label">Project Name</label>
                   <input type="text" class="form-control" id="appName" v-model="settings.appName">
                 </div>
                 <div class="mb-3">
