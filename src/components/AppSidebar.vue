@@ -24,6 +24,10 @@
           <i class="bi bi-graph-up me-2"></i>
           Analytics
         </router-link>
+        <router-link class="nav-link" to="/settings">
+          <i class="bi bi-gear me-2"></i>
+          App Settings
+        </router-link>
       </nav>
     </div>
   </div>

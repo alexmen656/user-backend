@@ -16,10 +16,10 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <a class="dropdown-item" href="#">
-              <i class="bi bi-gear me-1"></i>
-              Settings
-            </a>
+            <router-link class="dropdown-item" to="/user-settings">
+              <i class="bi bi-person-gear me-1"></i>
+              User Settings
+            </router-link>
           </li>
           <li>
             <a class="dropdown-item" href="#">
