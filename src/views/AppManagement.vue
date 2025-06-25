@@ -2,10 +2,7 @@
   <div class="app-management">
     <!-- Header -->
     <div class="row mb-4">
-      <div class="col">
-        <h1 class="h3 mb-0">App Management</h1>
-        <p class="text-muted">Manage your iOS/Android apps and their settings</p>
-      </div>
+      <PageHeader :isOfflineMode="false" title="App Management" desc="Manage your iOS/Android apps and their settings" />
       <div class="col-auto">
         <button class="btn btn-primary" @click="showAddAppModal = true">
           <i class="bi bi-plus-circle me-1"></i>
@@ -276,9 +273,13 @@ Authorization: Bearer YOUR_JWT_TOKEN</code></pre>
 
 <script>
 import api from '../services/api'
+import PageHeader from '../components/PageHeader.vue'
 
 export default {
   name: 'AppManagementView',
+  components: {
+    PageHeader
+  },
   data() {
     return {
       apps: [],

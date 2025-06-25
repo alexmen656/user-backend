@@ -2,16 +2,8 @@
   <div class="user-management">
     <!-- Header -->
     <div class="row mb-4">
-      <div class="col">
-        <h1 class="h3 mb-0">
-          User Management
-          <span v-if="isOfflineMode" class="badge bg-warning ms-2">
-            <i class="bi bi-wifi-off me-1"></i>
-            Offline Mode
-          </span>
-        </h1>
-        <p class="text-muted">Manage all your app users in one place</p>
-      </div>
+      <PageHeader :isOfflineMode="isOfflineMode" title="User Management"
+        desc="Manage all your app users in one place" />
       <div class="col-auto">
         <button class="btn btn-primary" @click="showAddUserModal = true">
           <i class="bi bi-plus-circle me-1"></i>
@@ -26,13 +18,8 @@
         <div class="row g-3">
           <div class="col-md-3">
             <label class="form-label">Search</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Search users..." 
-              v-model="filters.search"
-              @input="debouncedSearch"
-            >
+            <input type="text" class="form-control" placeholder="Search users..." v-model="filters.search"
+              @input="debouncedSearch">
           </div>
           <div class="col-md-2">
             <label class="form-label">App</label>
@@ -92,25 +79,20 @@
         </h5>
         <div class="d-flex align-items-center">
           <span class="text-muted me-3">
-            Showing {{ ((pagination.currentPage - 1) * parseInt(filters.limit)) + 1 }} to 
-            {{ Math.min(pagination.currentPage * parseInt(filters.limit), pagination.totalUsers) }} 
+            Showing {{ ((pagination.currentPage - 1) * parseInt(filters.limit)) + 1 }} to
+            {{ Math.min(pagination.currentPage * parseInt(filters.limit), pagination.totalUsers) }}
             of {{ pagination.totalUsers }}
           </span>
         </div>
       </div>
-      
+
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover mb-0">
             <thead>
               <tr>
                 <th>
-                  <input 
-                    type="checkbox" 
-                    class="form-check-input" 
-                    v-model="selectAll"
-                    @change="toggleSelectAll"
-                  >
+                  <input type="checkbox" class="form-check-input" v-model="selectAll" @change="toggleSelectAll">
                 </th>
                 <th>User</th>
                 <th>Email</th>
@@ -125,16 +107,13 @@
             <tbody>
               <tr v-for="user in users" :key="user._id">
                 <td>
-                  <input 
-                    type="checkbox" 
-                    class="form-check-input" 
-                    v-model="selectedUsers"
-                    :value="user._id"
-                  >
+                  <input type="checkbox" class="form-check-input" v-model="selectedUsers" :value="user._id">
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                    <div
+                      class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 40px; height: 40px;">
                       {{ user.username.charAt(0).toUpperCase() }}
                     </div>
                     <div>
@@ -166,19 +145,21 @@
                     </button>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="#" @click="editUser(user)">
-                        <i class="bi bi-pencil me-2"></i>Edit
-                      </a></li>
+                          <i class="bi bi-pencil me-2"></i>Edit
+                        </a></li>
                       <li><a class="dropdown-item" href="#" @click="viewUserDetails(user)">
-                        <i class="bi bi-eye me-2"></i>View Details
-                      </a></li>
-                      <li><hr class="dropdown-divider"></li>
+                          <i class="bi bi-eye me-2"></i>View Details
+                        </a></li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
                       <li><a class="dropdown-item" href="#" @click="toggleBlockUser(user)">
-                        <i :class="user.isBlocked ? 'bi bi-unlock me-2' : 'bi bi-lock me-2'"></i>
-                        {{ user.isBlocked ? 'Unblock' : 'Block' }}
-                      </a></li>
+                          <i :class="user.isBlocked ? 'bi bi-unlock me-2' : 'bi bi-lock me-2'"></i>
+                          {{ user.isBlocked ? 'Unblock' : 'Block' }}
+                        </a></li>
                       <li><a class="dropdown-item text-danger" href="#" @click="deleteUser(user)">
-                        <i class="bi bi-trash me-2"></i>Delete
-                      </a></li>
+                          <i class="bi bi-trash me-2"></i>Delete
+                        </a></li>
                     </ul>
                   </div>
                 </td>
@@ -187,7 +168,7 @@
           </table>
         </div>
       </div>
-      
+
       <!-- Pagination -->
       <div class="card-footer" v-if="pagination.totalPages > 1">
         <nav>
@@ -197,12 +178,8 @@
                 Previous
               </a>
             </li>
-            <li 
-              v-for="page in getPageNumbers()" 
-              :key="page" 
-              class="page-item" 
-              :class="{ active: page === pagination.currentPage }"
-            >
+            <li v-for="page in getPageNumbers()" :key="page" class="page-item"
+              :class="{ active: page === pagination.currentPage }">
               <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
             </li>
             <li class="page-item" :class="{ disabled: !pagination.hasNextPage }">
@@ -237,7 +214,8 @@
     </div>
 
     <!-- Add/Edit User Modal -->
-    <div class="modal fade" :class="{ show: showAddUserModal }" :style="{ display: showAddUserModal ? 'block' : 'none' }">
+    <div class="modal fade" :class="{ show: showAddUserModal }"
+      :style="{ display: showAddUserModal ? 'block' : 'none' }">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -304,7 +282,8 @@
     <div class="modal-backdrop fade" :class="{ show: showAddUserModal }" v-if="showAddUserModal"></div>
 
     <!-- User Details Modal -->
-    <div class="modal fade" :class="{ show: showUserDetailsModal }" :style="{ display: showUserDetailsModal ? 'block' : 'none' }">
+    <div class="modal fade" :class="{ show: showUserDetailsModal }"
+      :style="{ display: showUserDetailsModal ? 'block' : 'none' }">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
@@ -329,7 +308,9 @@
                     <div class="row g-3">
                       <div class="col-12">
                         <div class="d-flex align-items-center mb-3">
-                          <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                          <div
+                            class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style="width: 60px; height: 60px; font-size: 1.5rem;">
                             {{ selectedUserDetails.username.charAt(0).toUpperCase() }}
                           </div>
                           <div>
@@ -425,7 +406,8 @@
                       <div class="col-md-6">
                         <label class="form-label text-muted small">Two-Factor Auth</label>
                         <div>
-                          <span :class="selectedUserDetails.hasTwoFactorAuth ? 'badge bg-success' : 'badge bg-secondary'">
+                          <span
+                            :class="selectedUserDetails.hasTwoFactorAuth ? 'badge bg-success' : 'badge bg-secondary'">
                             {{ selectedUserDetails.hasTwoFactorAuth ? 'Enabled' : 'Disabled' }}
                           </span>
                         </div>
@@ -460,7 +442,8 @@
                       </div>
                       <div class="col-12">
                         <label class="form-label text-muted small">Last IP Address</label>
-                        <div class="fw-bold font-monospace">{{ selectedUserDetails.lastIpAddress || 'Not available' }}</div>
+                        <div class="fw-bold font-monospace">{{ selectedUserDetails.lastIpAddress || 'Not available' }}
+                        </div>
                       </div>
                       <div class="col-12">
                         <label class="form-label text-muted small">Login Count</label>
@@ -524,11 +507,8 @@
                       <button class="btn btn-primary btn-sm" @click="editUser(selectedUserDetails)">
                         <i class="bi bi-pencil me-1"></i>Edit User
                       </button>
-                      <button 
-                        class="btn btn-sm" 
-                        :class="selectedUserDetails.isBlocked ? 'btn-success' : 'btn-warning'"
-                        @click="toggleBlockUser(selectedUserDetails)"
-                      >
+                      <button class="btn btn-sm" :class="selectedUserDetails.isBlocked ? 'btn-success' : 'btn-warning'"
+                        @click="toggleBlockUser(selectedUserDetails)">
                         <i :class="selectedUserDetails.isBlocked ? 'bi bi-unlock me-1' : 'bi bi-lock me-1'"></i>
                         {{ selectedUserDetails.isBlocked ? 'Unblock User' : 'Block User' }}
                       </button>
@@ -559,9 +539,13 @@
 
 <script>
 import api from '../services/api'
+import PageHeader from '@/components/PageHeader.vue'
 
 export default {
   name: 'UserManagementView',
+  components: {
+    PageHeader
+  },
   data() {
     return {
       users: [],
@@ -615,19 +599,19 @@ export default {
         console.error('Error loading apps:', error)
       }
     },
-    
+
     async loadUsers() {
       try {
         const params = {
           page: this.filters.page,
           limit: this.filters.limit
         }
-        
+
         if (this.filters.search) params.search = this.filters.search
         if (this.filters.appId) params.appId = this.filters.appId
         if (this.filters.status) params.status = this.filters.status
         if (this.filters.subscription) params.subscription = this.filters.subscription
-        
+
         const response = await api.getUsers(params)
         this.users = response.data.users
         this.pagination = response.data.pagination
@@ -637,7 +621,7 @@ export default {
         console.error('Error loading users:', error)
       }
     },
-    
+
     debouncedSearch() {
       clearTimeout(this.searchTimeout)
       this.searchTimeout = setTimeout(() => {
@@ -645,7 +629,7 @@ export default {
         this.loadUsers()
       }, 500)
     },
-    
+
     resetFilters() {
       this.filters = {
         search: '',
@@ -657,25 +641,25 @@ export default {
       }
       this.loadUsers()
     },
-    
+
     changePage(page) {
       if (page >= 1 && page <= this.pagination.totalPages) {
         this.filters.page = page
         this.loadUsers()
       }
     },
-    
+
     getPageNumbers() {
       const pages = []
       const current = this.pagination.currentPage
       const total = this.pagination.totalPages
-      
+
       for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
         pages.push(i)
       }
       return pages
     },
-    
+
     toggleSelectAll() {
       if (this.selectAll) {
         this.selectedUsers = this.users.map(u => u._id)
@@ -683,7 +667,7 @@ export default {
         this.selectedUsers = []
       }
     },
-    
+
     editUser(user) {
       this.editingUser = user
       this.userForm = {
@@ -698,7 +682,7 @@ export default {
       }
       this.showAddUserModal = true
     },
-    
+
     async saveUser() {
       try {
         if (this.editingUser) {
@@ -713,7 +697,7 @@ export default {
         alert('Error saving user. Please check the form and try again.')
       }
     },
-    
+
     closeUserModal() {
       this.showAddUserModal = false
       this.editingUser = null
@@ -728,7 +712,7 @@ export default {
         phoneNumber: ''
       }
     },
-    
+
     async toggleBlockUser(user) {
       try {
         await api.blockUser(user._id, !user.isBlocked)
@@ -737,7 +721,7 @@ export default {
         console.error('Error updating user block status:', error)
       }
     },
-    
+
     async deleteUser(user) {
       if (confirm(`Are you sure you want to delete user "${user.username}"?`)) {
         try {
@@ -748,17 +732,17 @@ export default {
         }
       }
     },
-    
+
     viewUserDetails(user) {
       this.selectedUserDetails = user
       this.showUserDetailsModal = true
     },
-    
+
     closeUserDetailsModal() {
       this.showUserDetailsModal = false
       this.selectedUserDetails = null
     },
-    
+
     async bulkAction(action) {
       if (action === 'delete') {
         if (confirm(`Are you sure you want to delete ${this.selectedUsers.length} user(s)?`)) {
@@ -782,7 +766,7 @@ export default {
         this.loadUsers()
       }
     },
-    
+
     async sendNotificationToUser(user) {
       try {
         // This would typically send a notification to the user
@@ -795,7 +779,7 @@ export default {
         alert('Failed to send notification')
       }
     },
-    
+
     async exportUserData(user) {
       try {
         // Create a downloadable JSON file with user data
@@ -818,11 +802,11 @@ export default {
           lastIpAddress: user.lastIpAddress,
           loginCount: user.loginCount
         }
-        
+
         const dataStr = JSON.stringify(userData, null, 2)
         const dataBlob = new Blob([dataStr], { type: 'application/json' })
         const url = URL.createObjectURL(dataBlob)
-        
+
         const link = document.createElement('a')
         link.href = url
         link.download = `user_${user.username}_${new Date().toISOString().split('T')[0]}.json`
@@ -830,36 +814,36 @@ export default {
         link.click()
         document.body.removeChild(link)
         URL.revokeObjectURL(url)
-        
+
         alert(`User data exported for ${user.username}`)
       } catch (error) {
         console.error('Error exporting user data:', error)
         alert('Failed to export user data')
       }
     },
-    
+
     formatDate(date) {
       if (!date) return 'Never'
       return new Date(date).toLocaleDateString()
     },
-    
+
     formatDateTime(dateTime) {
       if (!dateTime) return 'Never'
       return new Date(dateTime).toLocaleString()
     },
-    
+
     getUserStatus(user) {
       if (user.isBlocked) return 'Blocked'
       if (!user.isActive) return 'Inactive'
       return 'Active'
     },
-    
+
     getStatusBadgeClass(user) {
       if (user.isBlocked) return 'badge bg-danger'
       if (!user.isActive) return 'badge bg-warning'
       return 'badge bg-success'
     },
-    
+
     getSubscriptionBadgeClass(status) {
       const classes = {
         'free': 'badge bg-secondary',
@@ -869,7 +853,7 @@ export default {
       }
       return classes[status] || 'badge bg-secondary'
     },
-    
+
     checkOfflineMode() {
       this.isOfflineMode = !navigator.onLine
     }

@@ -2,10 +2,7 @@
   <div class="analytics">
     <!-- Header -->
     <div class="row mb-4">
-      <div class="col">
-        <h1 class="h3 mb-0">Analytics</h1>
-        <p class="text-muted">Detailed insights into your user base and app performance</p>
-      </div>
+      <PageHeader :isOfflineMode="false" title="Analytics" desc="Detailed insights into your user base and app performance" />
       <div class="col-auto">
         <select class="form-select" v-model="selectedAppId" @change="loadAnalytics">
           <option value="">All Apps</option>
@@ -226,11 +223,15 @@
 </template>
 
 <script>
+import PageHeader from '@/components/PageHeader.vue'
 import api from '../services/api'
 import Chart from 'chart.js/auto'
 
 export default {
   name: 'AnalyticsView',
+  components: {
+    PageHeader
+  },
   data() {
     return {
       apps: [],

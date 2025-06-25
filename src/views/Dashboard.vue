@@ -2,16 +2,7 @@
   <div class="dashboard">
     <!-- Header -->
     <div class="row mb-4">
-      <div class="col">
-        <h1 class="h3 mb-0">
-          Dashboard
-          <span v-if="isOfflineMode" class="badge bg-warning ms-2">
-            <i class="bi bi-wifi-off me-1"></i>
-            Offline Mode
-          </span>
-        </h1>
-        <p class="text-muted">Overview of your user management system</p>
-      </div>
+      <PageHeader :isOfflineMode="isOfflineMode" title="Dashboard" desc="Overview of your user management system" />
       <div class="col-auto">
         <select class="form-select" v-model="selectedAppId" @change="loadAnalytics">
           <option value="">All Apps</option>
@@ -39,7 +30,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-3">
         <div class="card border-0 bg-success text-white">
           <div class="card-body">
@@ -55,7 +46,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-3">
         <div class="card border-0 bg-warning text-white">
           <div class="card-body">
@@ -71,7 +62,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-3">
         <div class="card border-0 bg-info text-white">
           <div class="card-body">
@@ -101,7 +92,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
@@ -138,7 +129,9 @@
                   <tr v-for="user in analytics.topUsers" :key="user._id">
                     <td>
                       <div class="d-flex align-items-center">
-                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                        <div
+                          class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                          style="width: 32px; height: 32px;">
                           {{ user.username.charAt(0).toUpperCase() }}
                         </div>
                         {{ user.username }}
@@ -159,14 +152,15 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
             <h5 class="card-title mb-0">Platform Distribution</h5>
           </div>
           <div class="card-body">
-            <div v-for="platform in analytics.platformStats" :key="platform._id" class="d-flex justify-content-between align-items-center mb-2">
+            <div v-for="platform in analytics.platformStats" :key="platform._id"
+              class="d-flex justify-content-between align-items-center mb-2">
               <div class="d-flex align-items-center">
                 <i :class="getPlatformIcon(platform._id)" class="me-2"></i>
                 <span>{{ platform._id || 'Unknown' }}</span>
@@ -183,9 +177,13 @@
 <script>
 import api from '../services/api'
 import Chart from 'chart.js/auto'
+import PageHeader from '@/components/PageHeader.vue'
 
 export default {
   name: 'DashboardView',
+  components: {
+    PageHeader
+  },
   data() {
     return {
       analytics: {},
@@ -209,12 +207,12 @@ export default {
         console.error('Error loading apps:', error)
       }
     },
-    
+
     async loadAnalytics() {
       try {
         const response = await api.getDashboardAnalytics(this.selectedAppId || null)
         this.analytics = response.data
-        
+
         this.$nextTick(() => {
           this.renderCharts()
         })
@@ -222,20 +220,20 @@ export default {
         console.error('Error loading analytics:', error)
       }
     },
-    
+
     renderCharts() {
       this.renderRegistrationChart()
       this.renderSubscriptionChart()
     },
-    
+
     renderRegistrationChart() {
       if (this.registrationChart) {
         this.registrationChart.destroy()
       }
-      
+
       const ctx = this.$refs.registrationChart
       const data = this.analytics.dailyRegistrations || []
-      
+
       this.registrationChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -259,15 +257,15 @@ export default {
         }
       })
     },
-    
+
     renderSubscriptionChart() {
       if (this.subscriptionChart) {
         this.subscriptionChart.destroy()
       }
-      
+
       const ctx = this.$refs.subscriptionChart
       const data = this.analytics.subscriptionStats || []
-      
+
       this.subscriptionChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -288,12 +286,12 @@ export default {
         }
       })
     },
-    
+
     formatDate(date) {
       if (!date) return 'Never'
       return new Date(date).toLocaleDateString()
     },
-    
+
     getStatusBadgeClass(status) {
       const classes = {
         'free': 'badge bg-secondary',
@@ -303,7 +301,7 @@ export default {
       }
       return classes[status] || 'badge bg-secondary'
     },
-    
+
     getPlatformIcon(platform) {
       const icons = {
         'iOS': 'bi bi-phone',
