@@ -63,8 +63,6 @@ export default {
 .controls-content {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  /*gap: 0.5rem;*/
 }
-
-/* Remove all navbar-specific styles since we're going headless */
 </style>

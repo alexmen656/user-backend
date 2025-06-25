@@ -2,8 +2,8 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="brand">
-        <img src="@/assets/logo.png" alt="Control Center Logo" height="24" class="d-inline-block align-text-top">
-        <span class="badge bg-light text-dark ms-2 fw-normal"><i class="bi bi-grid-3x3-gap me-2"></i>App Backend</span>
+        <img src="@/assets/logo.png" alt="Control Center Logo" height="28" class="d-inline-block align-text-top">
+        <!--<span class="badge bg-light text-dark ms-2 fw-normal"><i class="bi bi-grid-3x3-gap me-2"></i>App Backend</span>-->
       </div>
     </div>
     <div class="sidebar-content">
