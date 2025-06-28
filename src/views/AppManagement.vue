@@ -274,6 +274,7 @@ Authorization: Bearer YOUR_JWT_TOKEN</code></pre>
 <script>
 import api from '../services/api'
 import PageHeader from '../components/PageHeader.vue'
+import projectStore from '../services/projectStore.js'
 
 export default {
   name: 'AppManagementView',
@@ -308,6 +309,17 @@ export default {
   async mounted() {
     await this.loadApps()
     await this.loadAppStats()
+    
+    this.unsubscribe = projectStore.subscribe((project) => {
+      console.log('Project changed in AppManagement:', project)
+      this.loadApps()
+      this.loadAppStats()
+    })
+  },
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
   },
   methods: {
     async loadApps() {

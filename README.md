@@ -125,3 +125,4 @@ Built with ❤️ for iOS and Android developers who need a robust user manageme
 - MFA for users
 - SDKs for iOS/Android/Web(JS,NODE)
 - History of account status - helpful for moderation
+- Roles for projects, so more users can have access to the same project

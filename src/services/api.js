@@ -1,5 +1,6 @@
 import axios from 'axios'
 import localStorageService from './localStorageService'
+import projectStore from './projectStore'
 
 const API_BASE_URL = process.env.VUE_APP_API_URL || 'http://localhost:3001/api'
 const USE_LOCAL_STORAGE = process.env.VUE_APP_USE_LOCAL_STORAGE === 'true' || true // Default to true for offline development
@@ -15,10 +16,8 @@ if (!USE_LOCAL_STORAGE) {
     }
   })
 
-  // Request interceptor
   api.interceptors.request.use(
     config => {
-      // Add auth token if available
       const token = localStorage.getItem('authToken')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
@@ -30,14 +29,11 @@ if (!USE_LOCAL_STORAGE) {
     }
   )
 
-  // Response interceptor
   api.interceptors.response.use(
     response => response,
     error => {
       if (error.response?.status === 401) {
-        // Handle unauthorized access
         localStorage.removeItem('authToken')
-        // Optionally redirect to login
       }
       return Promise.reject(error)
     }
@@ -45,12 +41,13 @@ if (!USE_LOCAL_STORAGE) {
 }
 
 export default {
-  // User management
   getUsers(params = {}) {
     if (USE_LOCAL_STORAGE) {
-      return localStorageService.getUsers(params)
+      const currentProject = projectStore.getCurrentProject()
+      return localStorageService.getUsers({ ...params, projectId: currentProject.id })
     }
-    return api.get('/users', { params })
+    const currentProject = projectStore.getCurrentProject()
+    return api.get('/users', { params: { ...params, projectId: currentProject.id } })
   },
   getUser(id) {
     if (USE_LOCAL_STORAGE) {
@@ -84,7 +81,6 @@ export default {
   },
   getUserAnalytics(id) {
     if (USE_LOCAL_STORAGE) {
-      // Mock analytics for local storage
       return Promise.resolve({
         data: {
           userId: id,
@@ -106,12 +102,13 @@ export default {
     return api.get(`/users/${id}/analytics`)
   },
 
-  // App management
   getApps() {
     if (USE_LOCAL_STORAGE) {
-      return localStorageService.getApps()
+      const currentProject = projectStore.getCurrentProject()
+      return localStorageService.getApps(currentProject.id)
     }
-    return api.get('/apps')
+    const currentProject = projectStore.getCurrentProject()
+    return api.get('/apps', { params: { projectId: currentProject.id } })
   },
   getApp(id) {
     if (USE_LOCAL_STORAGE) {
@@ -144,31 +141,35 @@ export default {
     return api.post(`/apps/${id}/regenerate-key`)
   },
 
-  // Analytics
   getDashboardAnalytics(appId = null) {
     if (USE_LOCAL_STORAGE) {
-      return localStorageService.getDashboardAnalytics(appId)
+      const currentProject = projectStore.getCurrentProject()
+      return localStorageService.getDashboardAnalytics(appId, currentProject.id)
     }
-    const params = appId ? { appId } : {}
+    const currentProject = projectStore.getCurrentProject()
+    const params = appId ? { appId, projectId: currentProject.id } : { projectId: currentProject.id }
     return api.get('/analytics/dashboard', { params })
   },
   getGrowthAnalytics(appId = null, period = '30') {
     if (USE_LOCAL_STORAGE) {
-      return localStorageService.getGrowthAnalytics(appId, period)
+      const currentProject = projectStore.getCurrentProject()
+      return localStorageService.getGrowthAnalytics(appId, period, currentProject.id)
     }
-    const params = { period }
+    const currentProject = projectStore.getCurrentProject()
+    const params = { period, projectId: currentProject.id }
     if (appId) params.appId = appId
     return api.get('/analytics/growth', { params })
   },
   getRetentionAnalytics(appId = null) {
     if (USE_LOCAL_STORAGE) {
-      return localStorageService.getRetentionAnalytics(appId)
+      const currentProject = projectStore.getCurrentProject()
+      return localStorageService.getRetentionAnalytics(appId, currentProject.id)
     }
-    const params = appId ? { appId } : {}
+    const currentProject = projectStore.getCurrentProject()
+    const params = appId ? { appId, projectId: currentProject.id } : { projectId: currentProject.id }
     return api.get('/analytics/retention', { params })
   },
 
-  // Auth (for your iOS apps) - Mock implementations for local storage
   register(userData) {
     if (USE_LOCAL_STORAGE) {
       return localStorageService.createUser(userData).then(response => ({

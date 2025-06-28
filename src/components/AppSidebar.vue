@@ -3,7 +3,7 @@
     <div class="sidebar-header">
       <div class="brand">
         <a href="/"><img src="@/assets/logo.png" alt="Control Center Logo" height="28" class="d-inline-block align-text-top"></a>
-        <!--<span class="badge bg-light text-dark ms-2 fw-normal"><i class="bi bi-grid-3x3-gap me-2"></i>App Backend</span>-->
+        <small class="text-muted mt-1">Project: {{ selectedProject.name }}</small>
       </div>
     </div>
     <div class="sidebar-content">
@@ -60,44 +60,31 @@
 </template>
 
 <script>
+import projectStore from '@/services/projectStore.js'
+
 export default {
   name: 'AppSidebar',
   data() {
     return {
-      selectedProject: {
-        id: 1,
-        name: 'Main Project',
-        description: 'Primary application project'
-      },
-      projects: [
-        {
-          id: 1,
-          name: 'Main Project',
-          description: 'Primary application project'
-        },
-        {
-          id: 2,
-          name: 'Mobile App',
-          description: 'Mobile application backend'
-        },
-        {
-          id: 3,
-          name: 'Analytics Platform',
-          description: 'Data analytics and reporting'
-        },
-        {
-          id: 4,
-          name: 'E-Commerce API',
-          description: 'Online store backend services'
-        }
-      ]
+      selectedProject: projectStore.getCurrentProject(),
+      projects: projectStore.getProjects()
     }
   },
   methods: {
     selectProject(project) {
       this.selectedProject = project
-      this.$emit('project-changed', project)
+      projectStore.setCurrentProject(project)
       console.log('Selected project:', project)
+    }
+  },
+  mounted() {
+    this.unsubscribe = projectStore.subscribe((project) => {
+      this.selectedProject = project
+    })
+  },
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe()
     }
   }
 }

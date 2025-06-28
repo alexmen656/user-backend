@@ -175,9 +175,10 @@
 </template>
 
 <script>
-import api from '../services/api'
+import api from '@/services/api'
 import Chart from 'chart.js/auto'
 import PageHeader from '@/components/PageHeader.vue'
+import projectStore from '@/services/projectStore.js'
 
 export default {
   name: 'DashboardView',
@@ -197,6 +198,18 @@ export default {
   async mounted() {
     await this.loadApps()
     await this.loadAnalytics()
+    
+    this.unsubscribe = projectStore.subscribe((project) => {
+      console.log('Project changed in Dashboard:', project)
+      this.selectedAppId = ''
+      this.loadApps()
+      this.loadAnalytics()
+    })
+  },
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
   },
   methods: {
     async loadApps() {

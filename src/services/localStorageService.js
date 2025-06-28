@@ -50,23 +50,170 @@ class LocalStorageService {
         },
         {
           _id: '3',
-          username: 'testuser',
-          email: 'test@example.com',
-          firstName: 'Test',
+          username: 'webuser',
+          email: 'web@example.com',
+          firstName: 'Web',
           lastName: 'User',
           appId: 'com.example.webapp',
-          isActive: false,
-          isBlocked: true,
+          isActive: true,
+          isBlocked: false,
           subscriptionStatus: 'trial',
-          lastLoginAt: new Date('2025-06-15').toISOString(),
+          lastLoginAt: new Date('2025-06-22').toISOString(),
           createdAt: new Date('2025-06-05').toISOString(),
-          loginCount: 5,
+          loginCount: 8,
           phoneNumber: '+1234567892',
           deviceInfo: {
             deviceType: 'Web',
             deviceModel: 'Chrome',
             osVersion: 'Web',
             appVersion: '1.1.0'
+          }
+        },
+        {
+          _id: '4',
+          username: 'shopper1',
+          email: 'shopper1@mobile.com',
+          firstName: 'Alice',
+          lastName: 'Shopper',
+          appId: 'com.mobile.shop',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'premium',
+          lastLoginAt: new Date('2025-06-24').toISOString(),
+          createdAt: new Date('2025-05-15').toISOString(),
+          loginCount: 45,
+          phoneNumber: '+1234567893',
+          deviceInfo: {
+            deviceType: 'Android',
+            deviceModel: 'Google Pixel 8',
+            osVersion: '14.0',
+            appVersion: '2.0.0'
+          }
+        },
+        {
+          _id: '5',
+          username: 'mobilebob',
+          email: 'bob@mobile.com',
+          firstName: 'Bob',
+          lastName: 'Mobile',
+          appId: 'com.mobile.shop',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'free',
+          lastLoginAt: new Date('2025-06-23').toISOString(),
+          createdAt: new Date('2025-05-20').toISOString(),
+          loginCount: 32,
+          phoneNumber: '+1234567894',
+          deviceInfo: {
+            deviceType: 'iOS',
+            deviceModel: 'iPhone 14',
+            osVersion: '16.6',
+            appVersion: '2.0.0'
+          }
+        },
+        {
+          _id: '6',
+          username: 'analyst1',
+          email: 'analyst@analytics.com',
+          firstName: 'Data',
+          lastName: 'Analyst',
+          appId: 'com.analytics.dash',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'premium',
+          lastLoginAt: new Date('2025-06-25').toISOString(),
+          createdAt: new Date('2025-04-01').toISOString(),
+          loginCount: 128,
+          phoneNumber: '+1234567895',
+          deviceInfo: {
+            deviceType: 'Web',
+            deviceModel: 'Firefox',
+            osVersion: 'Web',
+            appVersion: '1.5.0'
+          }
+        },
+        {
+          _id: '7',
+          username: 'researcher',
+          email: 'research@analytics.com',
+          firstName: 'Research',
+          lastName: 'Team',
+          appId: 'com.analytics.dash',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'premium',
+          lastLoginAt: new Date('2025-06-24').toISOString(),
+          createdAt: new Date('2025-04-05').toISOString(),
+          loginCount: 89,
+          phoneNumber: '+1234567896',
+          deviceInfo: {
+            deviceType: 'Web',
+            deviceModel: 'Chrome',
+            osVersion: 'Web',
+            appVersion: '1.5.0'
+          }
+        },
+        {
+          _id: '8',
+          username: 'storeowner',
+          email: 'owner@ecommerce.com',
+          firstName: 'Store',
+          lastName: 'Owner',
+          appId: 'com.ecommerce.api',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'premium',
+          lastLoginAt: new Date('2025-06-25').toISOString(),
+          createdAt: new Date('2025-03-01').toISOString(),
+          loginCount: 256,
+          phoneNumber: '+1234567897',
+          deviceInfo: {
+            deviceType: 'API',
+            deviceModel: 'Server',
+            osVersion: 'Linux',
+            appVersion: '3.1.0'
+          }
+        },
+        {
+          _id: '9',
+          username: 'customer1',
+          email: 'customer@shop.com',
+          firstName: 'Happy',
+          lastName: 'Customer',
+          appId: 'com.ecommerce.api',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'free',
+          lastLoginAt: new Date('2025-06-24').toISOString(),
+          createdAt: new Date('2025-03-15').toISOString(),
+          loginCount: 67,
+          phoneNumber: '+1234567898',
+          deviceInfo: {
+            deviceType: 'API',
+            deviceModel: 'Mobile',
+            osVersion: 'API',
+            appVersion: '3.1.0'
+          }
+        },
+        {
+          _id: '10',
+          username: 'merchant',
+          email: 'merchant@ecommerce.com',
+          firstName: 'Big',
+          lastName: 'Merchant',
+          appId: 'com.ecommerce.api',
+          isActive: true,
+          isBlocked: false,
+          subscriptionStatus: 'premium',
+          lastLoginAt: new Date('2025-06-25').toISOString(),
+          createdAt: new Date('2025-02-20').toISOString(),
+          loginCount: 445,
+          phoneNumber: '+1234567899',
+          deviceInfo: {
+            deviceType: 'API',
+            deviceModel: 'Desktop',
+            osVersion: 'Windows',
+            appVersion: '3.1.0'
           }
         }
       ]
@@ -85,6 +232,7 @@ class LocalStorageService {
           description: 'A sample iOS application for user management',
           isActive: true,
           apiKey: 'api_key_12345678',
+          projectId: 1,
           createdAt: new Date('2025-05-01').toISOString(),
           settings: {
             allowRegistration: true,
@@ -103,12 +251,70 @@ class LocalStorageService {
           description: 'Web application for testing',
           isActive: true,
           apiKey: 'api_key_87654321',
+          projectId: 1,
           createdAt: new Date('2025-05-15').toISOString(),
           settings: {
             allowRegistration: false,
             requireEmailVerification: false,
             maxUsers: 5000,
             features: ['analytics']
+          }
+        },
+        {
+          _id: '3',
+          name: 'Mobile Shopping App',
+          appId: 'com.mobile.shop',
+          bundleId: 'com.mobile.shop',
+          platform: 'Android',
+          version: '2.0.0',
+          description: 'E-commerce mobile application',
+          isActive: true,
+          apiKey: 'api_key_mobile123',
+          projectId: 2,
+          createdAt: new Date('2025-04-10').toISOString(),
+          settings: {
+            allowRegistration: true,
+            requireEmailVerification: true,
+            maxUsers: 50000,
+            features: ['analytics', 'push_notifications', 'payments']
+          }
+        },
+        {
+          _id: '4',
+          name: 'Analytics Dashboard',
+          appId: 'com.analytics.dash',
+          bundleId: 'com.analytics.dash',
+          platform: 'Web',
+          version: '1.5.0',
+          description: 'Analytics and reporting dashboard',
+          isActive: true,
+          apiKey: 'api_key_analytics456',
+          projectId: 3,
+          createdAt: new Date('2025-03-20').toISOString(),
+          settings: {
+            allowRegistration: false,
+            requireEmailVerification: true,
+            maxUsers: 1000,
+            features: ['analytics', 'reports']
+          }
+        },
+        {
+          _id: '5',
+          name: 'E-Commerce API',
+          appId: 'com.ecommerce.api',
+          bundleId: 'com.ecommerce.api',
+          platform: 'API',
+          version: '3.1.0',
+          description: 'Backend API for e-commerce platform',
+          isActive: true,
+          apiKey: 'api_key_ecommerce789',
+          projectId: 4,
+          createdAt: new Date('2025-02-15').toISOString(),
+          settings: {
+            allowRegistration: true,
+            requireEmailVerification: true,
+            maxUsers: 100000,
+            features: ['analytics', 'payments', 'inventory']
           }
         }
       ]
@@ -139,6 +345,15 @@ class LocalStorageService {
     
     let users = JSON.parse(localStorage.getItem('users') || '[]')
     let filteredUsers = [...users]
+
+    if (params.projectId) {
+      const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+      const projectAppIds = apps
+        .filter(app => app.projectId === params.projectId)
+        .map(app => app.appId)
+      
+      filteredUsers = filteredUsers.filter(user => projectAppIds.includes(user.appId))
+    }
 
     if (params.search) {
       const searchLower = params.search.toLowerCase()
@@ -289,10 +504,16 @@ class LocalStorageService {
     return { data: users[userIndex] }
   }
 
-  async getApps() {
+  async getApps(projectId = null) {
     await this.delay()
     
     const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+    
+    if (projectId) {
+      const filteredApps = apps.filter(app => app.projectId === projectId)
+      return { data: filteredApps }
+    }
+    
     return { data: apps }
   }
 
@@ -318,10 +539,14 @@ class LocalStorageService {
     if (existing) {
       throw new Error('App with this ID or Bundle ID already exists')
     }
+
+    const { default: projectStore } = await import('./projectStore.js')
+    const currentProject = projectStore.getCurrentProject()
     
     const newApp = {
       _id: this.generateId('App'),
       ...appData,
+      projectId: currentProject.id,
       isActive: true,
       apiKey: 'api_key_' + Math.random().toString(36).substr(2, 16),
       createdAt: new Date().toISOString()
@@ -380,11 +605,24 @@ class LocalStorageService {
     return { data: apps[appIndex] }
   }
 
-  async getDashboardAnalytics(appId = null) {
+  async getDashboardAnalytics(appId = null, projectId = null) {
     await this.delay()
     
     const users = JSON.parse(localStorage.getItem('users') || '[]')
-    let filteredUsers = appId ? users.filter(u => u.appId === appId) : users
+    let filteredUsers = [...users]
+    
+    if (projectId) {
+      const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+      const projectAppIds = apps
+        .filter(app => app.projectId === projectId)
+        .map(app => app.appId)
+      
+      filteredUsers = filteredUsers.filter(user => projectAppIds.includes(user.appId))
+    }
+    
+    if (appId) {
+      filteredUsers = filteredUsers.filter(u => u.appId === appId)
+    }
     
     const overview = {
       totalUsers: filteredUsers.length,
@@ -426,11 +664,24 @@ class LocalStorageService {
     }
   }
 
-  async getGrowthAnalytics(appId = null, period = '30') {
+  async getGrowthAnalytics(appId = null, period = '30', projectId = null) {
     await this.delay()
     
     const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const filteredUsers = appId ? users.filter(u => u.appId === appId) : users
+    let filteredUsers = [...users]
+    
+    if (projectId) {
+      const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+      const projectAppIds = apps
+        .filter(app => app.projectId === projectId)
+        .map(app => app.appId)
+      
+      filteredUsers = filteredUsers.filter(user => projectAppIds.includes(user.appId))
+    }
+    
+    if (appId) {
+      filteredUsers = filteredUsers.filter(u => u.appId === appId)
+    }
     
     const days = parseInt(period)
     const growthData = []
@@ -458,11 +709,24 @@ class LocalStorageService {
     return { data: growthData }
   }
 
-  async getRetentionAnalytics(appId = null) {
+  async getRetentionAnalytics(appId = null, projectId = null) {
     await this.delay()
     
     const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const filteredUsers = appId ? users.filter(u => u.appId === appId) : users
+    let filteredUsers = [...users]
+    
+    if (projectId) {
+      const apps = JSON.parse(localStorage.getItem('apps') || '[]')
+      const projectAppIds = apps
+        .filter(app => app.projectId === projectId)
+        .map(app => app.appId)
+      
+      filteredUsers = filteredUsers.filter(user => projectAppIds.includes(user.appId))
+    }
+    
+    if (appId) {
+      filteredUsers = filteredUsers.filter(u => u.appId === appId)
+    }
     
     const now = new Date()
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)

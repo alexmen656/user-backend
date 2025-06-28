@@ -540,6 +540,7 @@
 <script>
 import api from '../services/api'
 import PageHeader from '@/components/PageHeader.vue'
+import projectStore from '../services/projectStore.js'
 
 export default {
   name: 'UserManagementView',
@@ -585,10 +586,21 @@ export default {
     this.checkOfflineMode()
     window.addEventListener('offline', this.checkOfflineMode)
     window.addEventListener('online', this.checkOfflineMode)
+    
+    this.projectUnsubscribe = projectStore.subscribe((project) => {
+      console.log('Project changed in UserManagement:', project)
+      this.filters.appId = ''
+      this.loadApps()
+      this.loadUsers()
+    })
   },
   beforeUnmount() {
     window.removeEventListener('offline', this.checkOfflineMode)
     window.removeEventListener('online', this.checkOfflineMode)
+    
+    if (this.projectUnsubscribe) {
+      this.projectUnsubscribe()
+    }
   },
   methods: {
     async loadApps() {
